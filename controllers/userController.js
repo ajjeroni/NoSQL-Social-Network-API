@@ -8,7 +8,6 @@ module.exports = {
   },
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId }).populate('thoughts').populate('friends')
-      // .select('')
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },

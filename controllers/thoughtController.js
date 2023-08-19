@@ -18,7 +18,7 @@ module.exports = {
         await User.findOneAndUpdate(
           { _id: req.body.userId },
           { $addToSet: { thoughts: newThought._id } },
-          { new: true }
+          { runValidators: true, new: true }
         );
       }
       res.json('thought created')
@@ -36,8 +36,24 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   deleteThought(req, res) {
-    Thought.deleteOne({ _id: req.params.userId })
+    Thought.deleteOne({ _id: req.params.thoughtId })
       .then((thought) => res.json(thought))
       .catch((err) => res.status(500).json(err));
+  },
+  async createReaction(req, res) {
+    try {
+      const newReaction = await reactions.create(req.body);
+      console.log('json recieved')
+      if (newReaction) {
+        await Thought.findOneAndUpdate(
+          { _id: req.body.thoughtId },
+          { $push: { reactions: newReaction._id } },
+          { runValidators: true, new: true }
+        );
+      }
+      res.json('reaction created')
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
 };
