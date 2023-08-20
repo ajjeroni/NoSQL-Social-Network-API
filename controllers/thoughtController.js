@@ -77,7 +77,7 @@ module.exports = {
     Thought.findOneAndUpdate(
       {_id: req.params.thoughtId},
       { $pull: {reactions: {reactionId: req.params.reactionId} }},
-      { new: true })
+      { runValidators: true, new: true })
     .then((reaction) => res.json(reaction))
     .catch((err) => res.status(500).json(err));
   }
